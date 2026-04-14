@@ -1,22 +1,36 @@
 package com.example.demo.service;
 
+import com.example.demo.admin.AdminComponent;
+import com.example.demo.entity.Admin;
+import com.example.demo.entity.Player;
 import com.example.demo.entity.quizConstructor.Question;
 import com.example.demo.entity.quizConstructor.Quiz;
+import com.example.demo.repository.AdminRepository;
+import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.QuizRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
 public class AdminService {
 
     private final QuizRepository quizRepository;
+    private final AdminRepository adminRepository;
+    private final PlayerRepository playerRepository;
 
-    public AdminService(QuizRepository quizRepository) {
+    public AdminService(QuizRepository quizRepository, AdminRepository adminRepository, PlayerRepository playerRepository) {
         this.quizRepository = quizRepository;
+        this.adminRepository = adminRepository;
+        this.playerRepository = playerRepository;
+    }
+
+    public void save(Admin admin) {
+        adminRepository.save(admin);
     }
 
     public void addQuiz(Quiz quiz) {
@@ -53,6 +67,14 @@ public class AdminService {
 
     public void deleteQuiz(Long id) {
         quizRepository.deleteById(id);
+    }
+
+    public boolean existsByUserName(String userName) {
+        return adminRepository.existsByUserName(userName);
+    }
+
+    public Optional<Admin> findByUserName(String userName) {
+       return adminRepository.findByUserName(userName);
     }
 
 

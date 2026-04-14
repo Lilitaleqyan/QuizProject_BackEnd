@@ -9,10 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:5050")
 public class AdminController {
     private final AdminService adminService;
     private final PlayerService playerService;
@@ -55,10 +57,11 @@ public class AdminController {
         return players.stream()
                 .map(r -> PlayerDTO.builder()
                         .id(r.getId())
-                          .userName(r.getUserName() != null ? r.getUserName() : " ")
-                          .email(r.getEmail() != null ? r.getEmail() : " ")
-                          .score(r.getScore() != 0 ? r.getScore() : 0)
-                          .build()
+                        .userName(r.getUserName() != null ? r.getUserName() : " ")
+                        .email(r.getEmail() != null ? r.getEmail() : " ")
+                        .score(r.getScore() != 0 ? r.getScore() : 0)
+                        .quizScoreResultList(r.getQuizScoreResultList() != null ? r.getQuizScoreResultList() : new ArrayList<>())
+                        .build()
 
                 ).toList();
     }

@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 public class Quiz {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -28,11 +28,10 @@ public class Quiz {
     @Enumerated(EnumType.STRING)
     private Topic topic;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     @Builder.Default
     Set<Question> question = new HashSet<>();
-
 
 
 }
