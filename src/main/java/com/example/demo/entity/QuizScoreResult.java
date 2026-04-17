@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,10 +15,11 @@ public class QuizScoreResult {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference("player_result")
     private Player player;
 
     @ManyToOne
+    @JsonBackReference
     private Quiz quiz;
 
     private Integer bestScore;
