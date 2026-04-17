@@ -4,16 +4,14 @@ import com.example.demo.entity.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class Player {
 
     private Boolean musicEnabled = true;
     private Boolean soundEnabled = true;
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "player")
     @JsonIgnore
     @JsonManagedReference
     List<QuizScoreResult> quizScoreResultList = new ArrayList<>();
