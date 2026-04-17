@@ -24,7 +24,7 @@ public class PlayerService {
     }
 
     public List<Player> findAll() {
-        return playerRepository.findAll();
+        return playerRepository.findAllWithQuizScoreResultList();
     }
 
     public Optional<Player> findByUserName(String userName) {

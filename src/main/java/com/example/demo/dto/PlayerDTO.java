@@ -1,14 +1,13 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.QuizScoreResult;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class PlayerDTO {
@@ -17,5 +16,5 @@ public class PlayerDTO {
     private String email;
     private int score;
     @Builder.Default
-    private List<QuizScoreResult> quizScoreResultList = new ArrayList<>();
+    private List<QuizScoreResultDTO> quizScoreResultList = new ArrayList<>();
 }

@@ -19,6 +19,5 @@ public class QuizScoreResult {
 
     @ManyToOne
     private Quiz quiz;
-
     private Integer bestScore;
 }
