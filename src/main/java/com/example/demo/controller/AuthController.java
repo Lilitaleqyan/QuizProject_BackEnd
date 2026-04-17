@@ -8,7 +8,6 @@ import com.example.demo.request_response.AuthResponse;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.PlayerService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -97,7 +96,7 @@ public class AuthController {
                     admin.getRole()
             ));
         }
-        Player player = playerService.findByUserName(authRequest.getUserName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Player not found"));
+        Player player = playerService.findByUserName(authRequest.getUserName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found"));
         return ResponseEntity.ok(
                 new AuthResponse(
                         player.getId(),
