@@ -28,7 +28,7 @@ public class Quiz {
     @Enumerated(EnumType.STRING)
     private Topic topic;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     @JsonManagedReference
     @Builder.Default
     Set<Question> question = new HashSet<>();
