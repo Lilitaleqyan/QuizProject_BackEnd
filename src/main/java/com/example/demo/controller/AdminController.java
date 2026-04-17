@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.PlayerDTO;
+import com.example.demo.dto.QuizScoreResultDTO;
 import com.example.demo.entity.Player;
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.example.demo.service.AdminService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
@@ -55,15 +57,27 @@ public class AdminController {
         }
 
         return players.stream()
-                .map(r -> PlayerDTO.builder()
-                        .id(r.getId())
-                        .userName(r.getUserName() != null ? r.getUserName() : " ")
-                        .email(r.getEmail() != null ? r.getEmail() : " ")
-                        .score(r.getScore() != 0 ? r.getScore() : 0)
-                        .quizScoreResultList(r.getQuizScoreResultList() != null ? r.getQuizScoreResultList() : new ArrayList<>())
-                        .build()
+                .map(r ->
+                {
+                    List<QuizScoreResultDTO> scores = (r.getQuizScoreResultList() == null)
+                            ? new ArrayList<>()
+                            : r.getQuizScoreResultList().stream()
+                              .map(result -> QuizScoreResultDTO.builder()
+                                             .id(result.getId())
+                                             .quiz(result.getQuiz().getTitle())
+                                             .bestScore(result.getBestScore())
+                                             .build())
+                              .collect(Collectors.toList());
 
-                ).toList();
+
+                    return PlayerDTO.builder()
+                            .id(r.getId())
+                            .userName(r.getUserName() != null ? r.getUserName() : " ")
+                            .email(r.getEmail() != null ? r.getEmail() : " ")
+                            .score(r.getScore() != 0 ? r.getScore() : 0)
+                            .quizScoreResultList(scores)
+                            .build();
+                }).collect(Collectors.toList());
     }
 
 

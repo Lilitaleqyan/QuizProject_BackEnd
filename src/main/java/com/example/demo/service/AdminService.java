@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.admin.AdminComponent;
 import com.example.demo.entity.Admin;
-import com.example.demo.entity.Player;
 import com.example.demo.entity.quizConstructor.Question;
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.example.demo.repository.AdminRepository;
@@ -21,12 +19,10 @@ public class AdminService {
 
     private final QuizRepository quizRepository;
     private final AdminRepository adminRepository;
-    private final PlayerRepository playerRepository;
 
-    public AdminService(QuizRepository quizRepository, AdminRepository adminRepository, PlayerRepository playerRepository) {
+    public AdminService(QuizRepository quizRepository, AdminRepository adminRepository) {
         this.quizRepository = quizRepository;
         this.adminRepository = adminRepository;
-        this.playerRepository = playerRepository;
     }
 
     public void save(Admin admin) {
@@ -62,7 +58,7 @@ public class AdminService {
     }
 
     public List<Quiz> getAllQuizzes() {
-        return quizRepository.findAll();
+        return quizRepository.findAllWithQuestion();
     }
 
     public void deleteQuiz(Long id) {
