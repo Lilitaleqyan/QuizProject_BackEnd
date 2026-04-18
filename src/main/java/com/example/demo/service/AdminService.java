@@ -3,10 +3,11 @@ package com.example.demo.service;
 import com.example.demo.dto.QuestionDTO;
 import com.example.demo.dto.QuizDTO;
 import com.example.demo.entity.Player;
-import com.example.demo.entity.Admin
+import com.example.demo.entity.Admin;
 import com.example.demo.entity.quizConstructor.Question;
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.example.demo.repository.AdminRepository;
+import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.QuizRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
