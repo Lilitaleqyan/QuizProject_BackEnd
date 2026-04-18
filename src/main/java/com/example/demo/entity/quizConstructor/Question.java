@@ -21,6 +21,17 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name ="quiz_id")
-    @JsonBackReference
     private Quiz quiz;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Question)) return false;
+        return id != null && id.equals(((Question) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
