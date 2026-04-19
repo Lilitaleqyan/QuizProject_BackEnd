@@ -53,7 +53,11 @@ public class AdminService {
                     return ResponseEntity.ok(quizRepository.save(setQuiz));
 
                 }
+<<<<<<< Updated upstream
                 ).orElseThrow();
+=======
+        ).orElseThrow(() -> new RuntimeException("Quiz not found"));
+>>>>>>> Stashed changes
 
     }
 
