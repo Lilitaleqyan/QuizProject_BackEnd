@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PlayerDTO;
 import com.example.demo.dto.QuizDTO;
-import com.example.demo.dto.QuizScoreResultDTO;
-import com.example.demo.entity.Player;
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.PlayerService;
@@ -12,9 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
@@ -60,34 +56,6 @@ public class AdminController {
 
     @GetMapping("/getAllPlayers")
     public List<PlayerDTO> getAllPlayers() {
-        List<Player> players = playerService.findAll();
-        if (players == null || players.isEmpty()) {
-            return List.of();
-        }
-
-        return players.stream()
-                .map(r ->
-                {
-                    List<QuizScoreResultDTO> scores = (r.getQuizScoreResultList() == null)
-                            ? new ArrayList<>()
-                            : r.getQuizScoreResultList().stream()
-                              .map(result -> QuizScoreResultDTO.builder()
-                                             .id(result.getId())
-                                             .quiz(result.getQuiz().getTitle())
-                                             .bestScore(result.getBestScore())
-                                             .build())
-                              .collect(Collectors.toList());
-
-
-                    return PlayerDTO.builder()
-                            .id(r.getId())
-                            .userName(r.getUserName() != null ? r.getUserName() : " ")
-                            .email(r.getEmail() != null ? r.getEmail() : " ")
-                            .score(r.getScore() != 0 ? r.getScore() : 0)
-                            .quizScoreResultList(scores)
-                            .build();
-                }).collect(Collectors.toList());
+        return playerService.getAllPlayers();
     }
-
-
 }

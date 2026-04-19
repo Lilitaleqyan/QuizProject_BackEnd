@@ -19,7 +19,6 @@ public class QuizScoreResult {
     private Player player;
 
     @ManyToOne
-    @JsonBackReference
     private Quiz quiz;
     private Integer bestScore;
 }

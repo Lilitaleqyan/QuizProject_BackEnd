@@ -45,7 +45,6 @@ public class Player {
     private Boolean soundEnabled = true;
     @OneToMany(mappedBy = "player")
     @JsonIgnore
-    @JsonManagedReference
     List<QuizScoreResult> quizScoreResultList = new ArrayList<>();
 
 }

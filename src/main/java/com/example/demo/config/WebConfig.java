@@ -9,8 +9,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Բոլոր հասցեների համար
-                .allowedOrigins("http://localhost:5050") // Միայն քո React-ի համար
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5050")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }

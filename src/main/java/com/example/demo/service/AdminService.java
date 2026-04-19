@@ -99,7 +99,7 @@ public class AdminService {
     }
 
     private QuizDTO convertToDTO(Quiz quiz) {
-        Set<QuestionDTO> questionDtos = quiz.getQuestion().stream()
+        Set<QuestionDTO> questionDto = quiz.getQuestion().stream()
                 .map(q -> QuestionDTO.builder()
                         .id(q.getId())
                         .content(q.getContent())
@@ -115,7 +115,7 @@ public class AdminService {
                 .title(quiz.getTitle())
                 .level(quiz.getLevel())
                 .topic(quiz.getTopic())
-                .question(questionDtos)
+                .question(questionDto)
                 .build();
     }
 }
