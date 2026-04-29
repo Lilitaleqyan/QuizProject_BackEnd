@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.OptionAnswerDTO;
 import com.example.demo.dto.QuestionDTO;
 import com.example.demo.dto.QuizDTO;
-import com.example.demo.entity.Player;
 import com.example.demo.entity.Admin;
+import com.example.demo.entity.quizConstructor.OptionAnswer;
 import com.example.demo.entity.quizConstructor.Question;
 import com.example.demo.entity.quizConstructor.Quiz;
 import com.example.demo.repository.AdminRepository;
@@ -13,9 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -40,6 +39,11 @@ public class AdminService {
         if (quiz.getQuestion() != null) {
             for (Question questions : quiz.getQuestion()) {
                 questions.setQuiz(quiz);
+                if (questions.getOptionAnswerSet() != null){
+                    for(OptionAnswer optionAnswer : questions.getOptionAnswerSet()) {
+                        optionAnswer.setQuestion(questions);
+                    }
+                }
             }
         }
 
@@ -61,17 +65,22 @@ public class AdminService {
                         quizDto.getQuestion().forEach(q -> {
                                     Question question = new Question();
                                     question.setContent(q.getContent());
-                                    question.setCorrectAnswer(q.getCorrectAnswer());
-                                    question.setWrongAnswer1(q.getWrongAnswer1());
-                                    question.setWrongAnswer2(q.getWrongAnswer2());
-                                    question.setWrongAnswer3(q.getWrongAnswer3());
+                                    Set<OptionAnswer> answers = q.getOptionAnswerSet() == null ? Collections.emptySet() :
+                                            q.getOptionAnswerSet().stream()
+                                            .map(a -> {
+                                                OptionAnswer optionAnswer = new OptionAnswer();
+                                                optionAnswer.setText(a.getText());
+                                                optionAnswer.setCorrect(Boolean.TRUE.equals(a.getCorrect()));                                                optionAnswer.setQuestion(question);
+                                                return optionAnswer;
+                                            }).collect(Collectors.toSet());
+                                    question.setOptionAnswerSet(answers);
 
                                     question.setQuiz(setQuiz);
                                     setQuiz.getQuestion().add(question);
                                 }
                         );
                     }
-                    Quiz savedQuiz  = quizRepository.save(setQuiz);
+                    Quiz savedQuiz = quizRepository.save(setQuiz);
                     return ResponseEntity.ok(convertToDTO(savedQuiz));
 
                 }
@@ -80,7 +89,7 @@ public class AdminService {
     }
 
     public List<QuizDTO> getAllQuizzes() {
-        List<Quiz> quizList =  quizRepository.findAllWithQuestion();
+        List<Quiz> quizList = quizRepository.findAllWithQuestion();
         return quizList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -99,15 +108,27 @@ public class AdminService {
     }
 
     private QuizDTO convertToDTO(Quiz quiz) {
+
         Set<QuestionDTO> questionDto = quiz.getQuestion().stream()
-                .map(q -> QuestionDTO.builder()
-                        .id(q.getId())
-                        .content(q.getContent())
-                        .correctAnswer(q.getCorrectAnswer())
-                        .wrongAnswer1(q.getWrongAnswer1())
-                        .wrongAnswer2(q.getWrongAnswer2())
-                        .wrongAnswer3(q.getWrongAnswer3())
-                        .build())
+                .map(q -> {
+
+                    Set<OptionAnswerDTO> answerDTO = q.getOptionAnswerSet() == null ? Collections.emptySet() :
+                    q.getOptionAnswerSet().stream()
+                            .map(o -> new OptionAnswerDTO(
+                                    o.getId(),
+                                    o.getText(),
+                                    o.getCorrect()
+                            ))
+                            .collect(Collectors.toSet());
+
+          QuestionDTO questionDTOS =  QuestionDTO.builder()
+                            .id(q.getId())
+                            .content(q.getContent())
+                            .optionAnswerSet(answerDTO)
+                            .build();
+                    return questionDTOS;
+
+                })
                 .collect(Collectors.toSet());
 
         return QuizDTO.builder()

@@ -23,6 +23,8 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private String userName;
     @Size(min = 8, message = "Առնվազն 8 նիշ")
     @Pattern(

@@ -1,8 +1,13 @@
 package com.example.demo.entity.quizConstructor;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -12,15 +17,14 @@ import lombok.*;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
     private String content;
-    private String correctAnswer;
-    private String wrongAnswer1;
-    private String wrongAnswer2;
-    private String wrongAnswer3;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<OptionAnswer> optionAnswerSet = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name ="quiz_id")
+    @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
     @Override

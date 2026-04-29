@@ -8,7 +8,9 @@ import com.example.demo.request_response.AuthResponse;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.PlayerService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,8 +55,12 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@Valid  @RequestBody Player player) {
-        if (playerService.existsByUserNameAndEmail(player.getUserName(), player.getEmail())) {
+    public ResponseEntity<?> registration(@Valid @RequestBody Player player) {
+        if (playerService.existsByUserName(player.getUserName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "user already exists"));
+
+        }
+        if (playerService.existByEmail(player.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "user already exists"));
 
         }
@@ -77,7 +82,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest, HttpServletResponse httpServletResponse) {
         try {
             authenticationManager.authenticate
                     (new UsernamePasswordAuthenticationToken(
@@ -86,8 +91,13 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalis username and password");
         }
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUserName());
         final String jwt = jwtUtil.generateJwt(authRequest.getUserName());
+        Cookie cookie = new Cookie("jwt", jwt);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60);
+        httpServletResponse.addCookie(cookie);
         if ("admin".equals(authRequest.getUserName())) {
             Admin admin = adminService.findByUserName(authRequest.getUserName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin not found"));
             return ResponseEntity.ok(new AuthResponse(

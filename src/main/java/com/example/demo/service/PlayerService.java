@@ -19,8 +19,13 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    public boolean existsByUserNameAndEmail(String username, String email) {
-        return playerRepository.existsByUserNameAndEmail(username, email);
+
+    public boolean existsByUserName(String userName) {
+        return playerRepository.existsPlayerByUserName(userName);
+    }
+
+    public boolean existByEmail(String email) {
+        return playerRepository.existsPlayerByEmail(email);
     }
 
     public Player save(Player player) {
@@ -55,10 +60,6 @@ public class PlayerService {
 
     }
 
-    public List<Player> findAll() {
-        return playerRepository.findAllWithQuizScoreResultList();
-    }
-
     public Optional<Player> findByUserName(String userName) {
         return playerRepository.findByUserName(userName);
     }
@@ -66,4 +67,10 @@ public class PlayerService {
     public Optional<Player> findById(Long id) {
         return playerRepository.findById(id);
     }
+
+    public Optional<Player> findByIdWithResults(Long id) {
+        return playerRepository.findByIdWithResults(id);
+    }
+
+
 }

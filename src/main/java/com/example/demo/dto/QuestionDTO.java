@@ -1,6 +1,10 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.quizConstructor.OptionAnswer;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -10,8 +14,5 @@ import lombok.*;
 public class QuestionDTO {
     Long id;
     String content;
-    String correctAnswer;
-    String wrongAnswer1;
-    String wrongAnswer2;
-    String wrongAnswer3;
+    Set<OptionAnswerDTO> optionAnswerSet = new HashSet<>();
 }

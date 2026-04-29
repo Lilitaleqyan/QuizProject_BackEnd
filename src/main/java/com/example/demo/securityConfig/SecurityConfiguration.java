@@ -46,9 +46,9 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/addQuiz", "/admin/delete/**", "/admin/update/**", "/admin/deleteQuestion/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/getAllQuizzes", "/admin/getAllPlayers", "/api/auth/**", "/player/**").permitAll()
-                        .requestMatchers("/songs/**", "/static/**").permitAll()
+                        .requestMatchers("/admin/addQuiz", "/admin/delete/**", "/admin/update/**","/admin/getAllPlayers", "/admin/deleteQuestion/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/getAllQuizzes",  "/api/auth/**").permitAll()
+                        .requestMatchers("/player/**").hasRole("USER")
                         .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
